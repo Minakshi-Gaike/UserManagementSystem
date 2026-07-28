@@ -36,24 +36,11 @@ namespace UserManagement.Services
            await db.TblUsers.AddAsync(user);
             await db.SaveChangesAsync();
         }
-
-        public async Task ChangePassword(ChangePasswordDTO p)
-        {
-            TblUser user =await db.TblUsers.FindAsync(p.UserID);
-            if(user!=null)
-            {
-                user.Password = p.NewPassword;
-                await db.SaveChangesAsync();
-            }
-           
-
-        }
-
         public async Task<UserDTO> CheckLogin(UserLoginDTO login)
         {
             UserDTO user = null;
             TblUser u = await db.TblUsers.FirstOrDefaultAsync(e => e.EmailAddress == login.EmailAddress && e.Password == login.Password);
-               //manual mapping....
+            //manual mapping....
             //if (u != null)
             //{
             //    user = new UserDTO()
@@ -70,13 +57,27 @@ namespace UserManagement.Services
             //}
             //return user;
 
-            if(u == null)
+            if (u == null)
             {
                 return null;
             }
             return mapper.Map<UserDTO>(u);
-            
+
         }
+
+        public async Task ChangePassword(ChangePasswordDTO p)
+        {
+            TblUser user =await db.TblUsers.FindAsync(p.UserID);
+            if(user!=null)
+            {
+                user.Password = p.NewPassword;
+                await db.SaveChangesAsync();
+            }
+           
+
+        }
+
+        
 
         
     }

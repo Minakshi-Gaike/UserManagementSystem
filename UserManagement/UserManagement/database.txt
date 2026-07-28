@@ -1,0 +1,47 @@
+﻿create database UserDB
+use UserDB
+create table TblRole
+(
+RoleId int identity primary key,
+RoleName varchar(50)
+)
+delete from TblRole where RoleId in (1,2)
+insert into TblRole values ('Developer'),('Tester')t
+select * from TblRole
+create table TblUser
+(
+UserId int identity primary key,
+UserName varchar(50),
+Gender varchar(10),
+BirthDate date,
+EmailAddress varchar(20),
+Password varchar(10),
+MobileNumber varchar(10),
+RoleId int constraint fkroleid references TblRole(RoleId),
+ProfilePhoto varchar(20),
+LocalAddress varchar(50),
+RegistrationDate datetime,
+IsActive int default 0,
+CreatedAt datetime,
+UpdatedAt datetime,
+DeletedAt datetime,
+Flag int default 0
+)
+select * from TblUser
+alter table TblUser
+add Password varchar(10)
+alter table TblUser 
+alter column  EmailAddress varchar(50)
+
+create table TblAdmin
+(
+AdminId int identity primary key,
+UserName varchar(50),
+Password varchar(50)
+)
+
+insert into TblAdmin values ('Admin','admin')
+
+select * from TblAdmin
+delete from TblUser where UserId in (3,4,5,6,7,8,11,12,14,15,16,17,18,19,21,22,23,25,26,27,28)
+delete from TblUser where UserId=29
