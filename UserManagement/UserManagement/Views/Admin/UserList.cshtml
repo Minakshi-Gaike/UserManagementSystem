@@ -1,0 +1,166 @@
+﻿@model List<UserManagement.Models.TblUser>
+
+
+
+@{
+    ViewData["Title"] = "UserList";
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+}
+
+<div class="container mt-4">
+
+    <div class="card">
+
+        <div class="card-header bg-primary text-white">
+
+            <div class="row">
+
+                <div class="col-md-6">
+                    <h4>Registered Users</h4>
+                </div>
+
+                <div class="col-md-6 text-end">
+
+                    <a asp-controller="Admin"
+                       asp-action="Logout"
+                       class="btn btn-danger">
+                        Logout
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="card-body">
+
+            @if (TempData["msg"] != null)
+            {
+                <div class="alert alert-success">
+                    @TempData["msg"]
+                </div>
+            }
+
+
+            <table class="table table-bordered table-striped">
+
+                <thead>
+
+                    <tr>
+
+                        <th>User ID</th>
+
+                        <th>Photo</th>
+
+                        <th>User Name</th>
+
+                        <th>Email</th>
+
+                        <th>Mobile</th>
+
+                        <th>Gender</th>
+
+                        <th>Status</th>
+
+                        <th>Action</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    @foreach (var user in Model)
+                    {
+                        <tr>
+
+                            <td>
+                                @user.UserId
+                            </td>
+
+                            <td>
+
+                                @if (!string.IsNullOrEmpty(user.ProfilePhoto))
+                                {
+                                    <img src="~/ProfilePhoto/@user.ProfilePhoto"
+                                         width="60"
+                                         height="60"
+                                         class="rounded-circle" />
+                                }
+                                else
+                                {
+                                    <span>No Photo</span>
+                                }
+
+                            </td>
+
+                            <td>
+                                @user.UserName
+                            </td>
+
+                            <td>
+                                @user.EmailAddress
+                            </td>
+
+                            <td>
+                                @user.MobileNumber
+                            </td>
+
+                            <td>
+                                @user.Gender
+                            </td>
+
+                            <td>
+
+                                @if (user.IsActive == 1)
+                                {
+                                    <span class="badge bg-success">
+                                        Active
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-danger">
+                                        Inactive
+                                    </span>
+                                }
+
+                            </td>
+
+                            <td>
+
+                                @if (user.IsActive == 0)
+                                {
+                                    <a asp-controller="Admin"
+                                       asp-action="ActivateUser"
+                                       asp-route-id="@user.UserId"
+                                       class="btn btn-success btn-sm">
+                                        Activate
+                                    </a>
+                                }
+                                else
+                                {
+                                    <a asp-controller="Admin"
+                                       asp-action="DeactivateUser"
+                                       asp-route-id="@user.UserId"
+                                       class="btn btn-warning btn-sm">
+                                        Deactivate
+                                    </a>
+                                }
+
+                            </td>
+
+                        </tr>
+                    }
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>

@@ -1,0 +1,93 @@
+﻿@using UserManagement.DTOs
+
+@model AdminDTO
+
+@{
+    ViewData["Title"] = "Admin Login";
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+}
+
+<div class="container mt-5">
+
+    <div class="row">
+
+        <div class="col-md-4"></div>
+
+        <div class="col-md-4">
+
+            @using (Html.BeginForm("AdminLogin", "Admin", FormMethod.Post))
+            {
+                <div class="card shadow">
+
+                    <div class="card-header text-center bg-primary text-white">
+                        <h2>Admin Login</h2>
+                    </div>
+
+                    <div class="card-body">
+
+                        @if (ViewBag.errormsg != null)
+                        {
+                            <div class="alert alert-danger">
+                                @ViewBag.errormsg
+                            </div>
+                        }
+
+                        <div class="mb-3">
+
+                            <label>User Name</label>
+
+                            @Html.TextBoxFor(
+                                e => e.UserName,
+                                new
+                                {
+                                    @class = "form-control",
+                                    placeholder = "Enter username"
+                                })
+
+                            @Html.ValidationMessageFor(
+                                e => e.UserName,
+                                "",
+                                new { @class = "text-danger" })
+
+                        </div>
+
+
+                        <div class="mb-3">
+
+                            <label>Password</label>
+
+                            @Html.PasswordFor(
+                                e => e.Password,
+                                new
+                                {
+                                    @class = "form-control",
+                                    placeholder = "Enter password"
+                                })
+
+                            @Html.ValidationMessageFor(
+                                e => e.Password,
+                                "",
+                                new { @class = "text-danger" })
+
+                        </div>
+
+                    </div>
+
+                    <div class="card-footer text-center">
+
+                        <input type="submit"
+                               value="Login"
+                               class="btn btn-primary" />
+
+                    </div>
+
+                </div>
+            }
+
+        </div>
+
+        <div class="col-md-4"></div>
+
+    </div>
+
+</div>

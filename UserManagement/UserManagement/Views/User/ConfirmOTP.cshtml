@@ -1,0 +1,52 @@
+﻿@{
+
+    
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+
+            @using (Html.BeginForm("ConfirmOTP", "User", FormMethod.Post,
+                    new { enctype = "multipart/form-data" }))
+            {
+                <div class="card shadow border-0">
+
+                    <div class="card-header bg-primary text-white">
+                        <h3 class="mb-0 text-center">
+                            Confirm OTP
+                        </h3>
+                    </div>
+
+                    <div class="card-body">
+
+                        <div class="row">
+
+                            <!-- Confirm OTP -->
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Enter OTP</label>
+                                @* <input type="text" name="user_otp" class="form-control" /> *@
+                                <h3 class="text-danger">@ViewBag.errormsg</h3>
+                                <h3 class="text-danger">@ViewBag.message</h3>
+
+                                @Html.TextBox("user_otp", null, new
+                                {
+                                    @class = "form-control",
+                                    placeholder = "Enter OTP"
+                                })
+                            </div>
+
+                        </div>
+
+                        <div>
+                            <input type="submit" value="Confirm" class="btn btn-primary" />
+                        </div>
+
+                    </div>
+
+                </div>
+            }
+
+        </div>
+    </div>
+</div>

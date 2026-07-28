@@ -1,0 +1,112 @@
+﻿
+@model UserManagement.Models.TblUser
+
+@{
+    ViewData["Title"] = "ChangePhoto";
+    Layout = "~/Views/Shared/_ProfileLayout.cshtml";
+}
+
+
+
+<div class="row">
+
+    ```
+    <div class="col-md-2"></div>
+
+    <div class="col-md-8">
+
+        <div class="card mt-3">
+
+            <div class="card-header bg-primary text-white">
+                <h5>Change Profile Photo</h5>
+            </div>
+
+            <form asp-controller="User"
+                  asp-action="ChangePhoto"
+                  method="post"
+                  enctype="multipart/form-data">
+
+                <div class="card-body">
+
+                    @if (ViewBag.msg != null)
+                    {
+                        <div class="alert alert-success">
+                            @ViewBag.msg
+                        </div>
+                    }
+
+                    @if (ViewBag.errormsg != null)
+                    {
+                        <div class="alert alert-danger">
+                            @ViewBag.errormsg
+                        </div>
+                    }
+
+                    <div class="mb-3">
+
+                        <label class="form-label">
+                            Choose Profile Photo
+                        </label>
+
+                        <input type="file"
+                               name="ProfilePhoto"
+                               class="form-control"
+                               accept="image/*"
+                               onchange="previewImage(event)" />
+
+                    </div>
+
+                    <div class="text-center">
+
+                        @if (Model != null && !string.IsNullOrEmpty(Model.ProfilePhoto))
+                        {
+                            <img id="preview"
+                                 src="~/ProfilePhoto/@Model.ProfilePhoto"
+                                 width="120"
+                                 height="120"
+                                 class="rounded-circle border" />
+                        }
+                        else
+                        {
+                            <img id="preview"
+                                 src="#"
+                                 style="display:none;width:120px;height:120px;border-radius:50%;" />
+                        }
+
+                    </div>
+
+                </div>
+
+                <div class="card-footer">
+
+                    <button type="submit"
+                            class="btn btn-primary">
+                        Save Image
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+    <div class="col-md-2"></div>
+    ```
+
+</div>
+
+<script>
+
+    function previewImage(event) {
+
+        var image = document.getElementById('preview');
+
+        image.src = URL.createObjectURL(event.target.files[0]);
+
+        image.style.display = "block";
+
+    }
+
+</script>
