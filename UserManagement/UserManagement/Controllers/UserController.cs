@@ -1,12 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using UserManagement.Models;
-using UserManagement.DTOs;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using AutoMapper;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
-using UserManagement.Services;
-using System.Text.Json.Serialization;
 using Newtonsoft.Json;
+using System.Text.Json.Serialization;
+using UserManagement.DTOs;
+using UserManagement.Models;
+using UserManagement.Services;
+using UserManagementProject.DTOs;
 
 
 namespace UserManagement.Controllers
@@ -389,8 +390,126 @@ namespace UserManagement.Controllers
 
             return View(existingUser);
         }
+        //Forgot Password
+
+        public IActionResult ForgotPassword()
+        {
+            return View();
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> ForgotPassword(ForgotPasswordDto p)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(p);
+            }
+
+            TblUser user = db.TblUsers.FirstOrDefault(e => e.EmailAddress.ToLower() == p.EmailAddress.ToLower());
+
+            if (user == null)
+            {
+                ViewBag.errormsg = "Email address not found.";
+                return View(p);
+            }
+
+            // Create reset password link
+            string resetLink = Url.Action("ResetPassword", "User", new
+            {
+                EmailAddress = user.EmailAddress
+            }, Request.Scheme);
+
+            string message = $@"
+        <h2>Dear {user.UserName},</h2>
+
+        <p>You requested to reset your password.</p>
+
+        <p>Click the link below to reset your password:</p>
+
+        <p>
+            <a href='{resetLink}'>
+                Reset Password
+            </a>
+        </p>
+
+        <p>If you did not request this, please ignore this email.</p>
+    ";
+
+            EmailModel email = new EmailModel()
+            {
+                UserName = user.UserName,
+                EmailId = user.EmailAddress,
+                Subject = "Reset Password",
+                Message = message
+            };
+
+            await extraService.SendEmail(email);
+
+            ViewBag.msg =
+                "Password reset link has been sent to your registered email address.";
+
+            return View();
+        }
+
+
+        public IActionResult ResetPassword(string EmailAddress)
+        {
+            if (string.IsNullOrEmpty(EmailAddress))
+            {
+                return RedirectToAction("ForgotPassword");
+            }
+
+            ResetPasswordDto r = new ResetPasswordDto()
+            {
+                EmailAddress = EmailAddress
+            };
+
+            return View(r);
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> ResetPassword(ResetPasswordDto p)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(p);
+            }
+
+            TblUser user = db.TblUsers.FirstOrDefault(
+                e => e.EmailAddress.ToLower() == p.EmailAddress.ToLower()
+            );
+
+            if (user == null)
+            {
+                ViewBag.errormsg = "Email address not found.";
+                return View(p);
+            }
+
+            if (p.NewPaswword != p.ConfirmNewPassword)
+            {
+                ViewBag.errormsg =
+                    "New password and confirm password do not match.";
+
+                return View(p);
+            }
+
+            user.Password = p.NewPaswword;
+            user.UpdatedAt = DateTime.Now;
+
+            await db.SaveChangesAsync();
+
+            TempData["msg"] =
+                "Password changed successfully. Please login.";
+
+            return RedirectToAction("UserLogin");
+        }
+
     }
 }
+    
+
     
 
     
